@@ -22,12 +22,11 @@ app.listen(PORT, async () => {
     console.log("connecting with database");
     await connectDatabase;
     console.log("connected with database");
+    console.log(`server running at port:${PORT}`);
   } catch (err) {
     console.log({
       message: "unable to connect with database",
       err: err.message,
     });
   }
-
-  console.log(`server running at port:${PORT}`);
 });

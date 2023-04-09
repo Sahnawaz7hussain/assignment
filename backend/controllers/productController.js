@@ -2,7 +2,6 @@ const { productModel } = require("../models/productModel");
 
 const addNewProduct = async (req, res) => {
   let data = req.body;
-  console.log("data; ", data);
   try {
     let newProduct = new productModel({ ...data });
     await newProduct.save();
@@ -15,7 +14,6 @@ const addNewProduct = async (req, res) => {
 // get product by id
 const getById = async (req, res) => {
   let id = req.params.id;
-  console.log("id: ", id);
   try {
     let product = await productModel.findById(id);
     res.status(200).json({ product });
@@ -57,23 +55,25 @@ const deleteProduct = async (req, res) => {
 const productsList = async (req, res) => {
   let query = req.query;
   let { _sort, _page = 1 } = query;
-  let Limit = 2;
+  let Limit = 8;
 
   let Skip = Limit * (_page - 1);
-  //   console.log("skipp: ", Skip);
-  //   console.log("query: ", _sort);
+
   try {
+    let count = await productModel.find().countDocuments();
+    let totalPages = Math.ceil(count / Limit);
     if (_sort) {
       let products = await productModel
         .find()
         .limit(Limit)
         .skip(Skip)
         .sort({ name: _sort === "asc" ? 1 : -1 });
-      res.status(200).json({ products });
+
+      res.status(200).json({ products, totalPages });
     } else {
       let products = await productModel.find().limit(Limit).skip(Skip);
 
-      res.status(200).json({ products });
+      res.status(200).json({ products, totalPages });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });

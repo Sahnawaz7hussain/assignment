@@ -6,13 +6,18 @@ const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET;
 
 const signup = async (req, res) => {
-  try {
-    let { email, name, password } = req.body;
+  let { email, name, password } = req.body;
 
-    const hash = bcrypt.hashSync(password, salt);
-    let newUser = new UserModel({ email, name, password: hash });
-    await newUser.save();
-    res.status(200).json({ message: "signup succesfull", user: req.body });
+  try {
+    let isUserPresent = (await UserModel.findOne({ email })) || null;
+    if (isUserPresent) {
+      res.status(403).json({ message: "User already exist." });
+    } else {
+      const hash = bcrypt.hashSync(password, salt);
+      let newUser = new UserModel({ email, name, password: hash });
+      await newUser.save();
+      res.status(200).json({ message: "signup succesfull", user: req.body });
+    }
   } catch (err) {
     res.status(500).json({ message: "something went wrong", err: err.message });
   }
@@ -30,7 +35,7 @@ const login = async (req, res) => {
       const token = jwt.sign({ userId: userFound._id }, secret);
       res.status(200).send({ message: "Login Success", token: token });
     } else {
-      return res.json({ message: "Wrong password" });
+      return res.status(401).json({ message: "Wrong password" });
     }
   } catch (err) {
     res.status(500).json({
