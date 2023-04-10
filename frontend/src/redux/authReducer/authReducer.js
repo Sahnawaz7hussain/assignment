@@ -44,7 +44,7 @@ const authReducer = (oldState = initAuthData, action) => {
         isAuth: false,
       };
     case types.USER_LOGIN_SUCCESS:
-      localStorage.setItem("TOKEN", JSON.stringify(payload.token));
+      window.localStorage.setItem("TOKEN", JSON.stringify(payload.token));
       // console.log("reduer: ", payload);
       return {
         ...oldState,

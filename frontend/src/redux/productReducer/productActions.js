@@ -2,11 +2,11 @@ import * as types from "./productActionType";
 import axios from "axios";
 
 const base_url = import.meta.env.VITE_BASE_URL;
-const jwtToken = JSON.parse(localStorage.getItem("TOKEN"));
+const jwtToken = JSON.parse(window.localStorage.getItem("TOKEN"));
 console.log("jwt toke: ", jwtToken);
 const headers = {
   headers: {
-    authorization: `Bearer ${window.localStorage.getItem("TOKEN")}`,
+    authorization: `Bearer ${jwtToken}`,
   },
 };
 // add new product;
@@ -14,7 +14,9 @@ const postProductActionFn = (product) => (dispatch) => {
   dispatch({ type: types.ADD_PRODUCT_REQUEST });
   return axios
     .post(`${base_url}/product/add`, product, {
-      ...headers,
+      headers: {
+        authorization: "Bearer " + JSON.parse(localStorage.getItem("TOKEN")),
+      },
     })
     .then((res) => {
       return dispatch({ type: types.ADD_PRODUCT_SUCCESS, payload: res.data });
@@ -62,7 +64,11 @@ const getProductByIdActionFn = (id) => (dispatch) => {
 const deleteProductActionFn = (id) => (dispatch) => {
   dispatch({ type: types.DELETE_PRODUCT_REQUEST });
   return axios
-    .delete(`${base_url}/product/delete/${id}`, { ...headers })
+    .delete(`${base_url}/product/delete/${id}`, {
+      headers: {
+        authorization: "Bearer " + JSON.parse(localStorage.getItem("TOKEN")),
+      },
+    })
     .then((res) => {
       return dispatch({
         type: types.DELETE_PRODUCT_SUCCESS,
@@ -76,7 +82,11 @@ const deleteProductActionFn = (id) => (dispatch) => {
 const updateProductActionFn = (id, data) => (dispatch) => {
   dispatch({ type: types.UPDATE_PRODUCT_REQUEST });
   return axios
-    .put(`${base_url}/product/update/${id}`, data, { ...headers })
+    .put(`${base_url}/product/update/${id}`, data, {
+      headers: {
+        authorization: "Bearer " + JSON.parse(localStorage.getItem("TOKEN")),
+      },
+    })
     .then((res) => {
       return dispatch({
         type: types.UPDATE_PRODUCT_SUCCESS,

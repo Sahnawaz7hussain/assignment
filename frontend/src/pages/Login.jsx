@@ -30,7 +30,6 @@ export default function Login() {
 
   const data = useSelector((state) => state.authReducer);
 
-  console.log("dat;: ", data);
   const handleOnChange = (e) => {
     let { value, name } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -62,7 +61,6 @@ export default function Login() {
     }
     dispatch(userLoginActionFn(userData))
       .then((res) => {
-        console.log(res);
         let obj = res.payload;
         if (res.payload.message === "Login Success") {
           toast({
