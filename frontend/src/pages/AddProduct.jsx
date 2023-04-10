@@ -7,11 +7,14 @@ import {
   FormLabel,
   Heading,
   Input,
+  Spinner,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postProductActionFn } from "../redux/productReducer/productActions";
+import { useNavigate } from "react-router-dom";
+import { userLogoutActionFn } from "../redux/authReducer/authActions";
 
 const initialData = {
   name: "",
@@ -23,6 +26,7 @@ const initialData = {
 const AddProduct = () => {
   const toast = useToast();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [productData, setProductData] = useState(initialData);
 
   // handle onChange
@@ -46,6 +50,7 @@ const AddProduct = () => {
     }
     dispatch(postProductActionFn(productData))
       .then((res) => {
+        //  console.log(res, "rrrrrrrr");
         if (res.type === "ADD_PRODUCT_SUCCESS") {
           setProductData(initialData);
           return toast({
@@ -56,13 +61,16 @@ const AddProduct = () => {
             isClosable: true,
           });
         } else {
+          dispatch(userLogoutActionFn());
           toast({
-            title: "Something went wrong please try again later.",
+            title: `${res.payload.message}`,
+            description: "Please Login again",
             status: "error",
-            duration: 1000,
+            duration: 2000,
             isClosable: true,
             position: "top",
           });
+          navigate("/login");
         }
       })
       .catch((err) => {
@@ -128,7 +136,7 @@ const AddProduct = () => {
           colorScheme="blue"
           onClick={handleAddProductEvent}
         >
-          Add
+          ADD
         </Button>
       </Flex>
     </Container>

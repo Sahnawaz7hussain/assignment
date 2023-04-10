@@ -1,12 +1,12 @@
 import * as types from "./productActionType";
 import axios from "axios";
-//console.log("header: ", headers);
 
 const base_url = import.meta.env.VITE_BASE_URL;
-const jwtTokan = JSON.parse(localStorage.getItem("JWT"));
+const jwtToken = JSON.parse(localStorage.getItem("TOKEN"));
+console.log("jwt toke: ", jwtToken);
 const headers = {
   headers: {
-    authorization: `Bearer ${jwtTokan}`, //the token is a variable which holds the token
+    authorization: `Bearer ${JSON.parse(localStorage.getItem("TOKEN"))}`,
   },
 };
 // add new product;
@@ -20,7 +20,10 @@ const postProductActionFn = (product) => (dispatch) => {
       return dispatch({ type: types.ADD_PRODUCT_SUCCESS, payload: res.data });
     })
     .catch((err) => {
-      return dispatch({ type: types.ADD_PRODUCT_FAILURE, payload: err });
+      return dispatch({
+        type: types.ADD_PRODUCT_FAILURE,
+        payload: err.response.data,
+      });
     });
 };
 

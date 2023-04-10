@@ -10,9 +10,10 @@ import {
   useColorModeValue,
   Text,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userSignupActionFn } from "../redux/authReducer/authActions";
 
@@ -27,6 +28,8 @@ export default function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
+
+  const user = useSelector((state) => state.authReducer);
 
   const handleOnChange = (e) => {
     let { value, name } = e.target;
@@ -157,9 +160,14 @@ export default function Signup() {
                   bg: "blue.500",
                 }}
               >
-                Sign in
+                {user.isLoading ? <Spinner /> : "Sign up"}
               </Button>
             </Stack>
+            {user.isError && (
+              <Box color="red" as={"span"}>
+                Something went wrong.
+              </Box>
+            )}
             <Text>
               All ready have an accound <Link to="/login">Login</Link>{" "}
             </Text>

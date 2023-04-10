@@ -16,21 +16,26 @@ import {
   Stack,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Loading from "../components/Loading";
+import { userLogoutActionFn } from "../redux/authReducer/authActions";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const toast = useToast();
   const location = useLocation();
   const dispatch = useDispatch();
 
   const [sort, setSort] = useState(searchParams.get("_sort") || "");
   const [page, setPage] = useState(searchParams.get("_page") || 1);
   const product = useSelector((state) => state.productReducer);
+  const { isAuth } = useSelector((state) => state.authReducer);
   const { isLoading, isError, data } = product;
   let params = {};
+  // handle pagination function
   const handlePagination = (val) => {
     setPage((pre) => Number(pre) + Number(val));
   };
@@ -58,9 +63,21 @@ const Products = () => {
     if (!id) return;
     dispatch(deleteProductActionFn(id))
       .then((res) => {
-        query._page = searchParams.get("_page");
-        sort && (query._sort = sort);
-        dispatch(getProductsActionFn(query));
+        if (res.type === "DELETE_PRODUCT_SUCCESS") {
+          query._page = searchParams.get("_page");
+          sort && (query._sort = sort);
+          dispatch(getProductsActionFn(query));
+        } else {
+          dispatch(userLogoutActionFn);
+          return toast({
+            title: `${res.payload.response.data.message}`,
+            description: "Please login again",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+            position: "top",
+          });
+        }
         //console.log(res, "quer: ", query);
       })
       .catch((err) => {
@@ -86,11 +103,13 @@ const Products = () => {
           </RadioGroup>
         </VStack>
         <Spacer />
-        <Link to="/add">
-          <Button colorScheme="blue" rightIcon={<AddIcon />}>
-            Add new Product
-          </Button>
-        </Link>
+        {isAuth && (
+          <Link to="/add">
+            <Button colorScheme="blue" rightIcon={<AddIcon />}>
+              Add new Product
+            </Button>
+          </Link>
+        )}
       </Flex>
       <br />
       <br />

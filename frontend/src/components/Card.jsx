@@ -21,6 +21,7 @@ import {
   FormLabel,
   Input,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,9 +31,11 @@ import {
   updateProductActionFn,
 } from "../redux/productReducer/productActions";
 import { useState } from "react";
+import { userLogoutActionFn } from "../redux/authReducer/authActions";
 
 function Card({ data, deleteProduct }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialData = {
     name: data.name,
@@ -61,10 +64,25 @@ function Card({ data, deleteProduct }) {
   const handleUpdateProduct = (id, data) => {
     dispatch(updateProductActionFn(id, data))
       .then((res) => {
-        console.log("update,res:", res);
-        query._page = searchParams.get("_page");
-        dispatch(getProductsActionFn(query));
-        onClose();
+        // console.log("update,res:", res);
+        if (res.type === "UPDATE_PRODUCT_FAILURE") {
+          dispatch(userLogoutActionFn());
+          onClose();
+
+          toast({
+            title: `${res.payload.response.data.message}`,
+            description: "Please Login again",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+            position: "top",
+          });
+          // console.log("haaa");
+        } else {
+          query._page = searchParams.get("_page");
+          dispatch(getProductsActionFn(query));
+          onClose();
+        }
       })
       .catch((err) => {
         console.log(err);

@@ -1,5 +1,5 @@
 import * as types from "./authActionType";
-const userToken = JSON.parse(localStorage.getItem("JWT"));
+const userToken = JSON.parse(localStorage.getItem("TOKEN"));
 const isAuth = userToken ? true : false;
 //console.log("userTokan");
 const initAuthData = {
@@ -44,8 +44,8 @@ const authReducer = (oldState = initAuthData, action) => {
         isAuth: false,
       };
     case types.USER_LOGIN_SUCCESS:
-      localStorage.setItem("JWT", JSON.stringify(payload.token));
-      console.log("reduer: ", payload);
+      localStorage.setItem("TOKEN", JSON.stringify(payload.token));
+      // console.log("reduer: ", payload);
       return {
         ...oldState,
         isLoading: false,
@@ -62,7 +62,7 @@ const authReducer = (oldState = initAuthData, action) => {
         isAuth: false,
       };
     case types.USER_LOGOUT_REQUEST:
-      localStorage.removeItem("JWT");
+      localStorage.removeItem("TOKEN");
       return {
         ...oldState,
         isLoading: false,

@@ -10,6 +10,7 @@ import {
   Text,
   useColorModeValue,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -140,11 +141,15 @@ export default function Login() {
                   bg: "blue.500",
                 }}
               >
-                Sign in
+                {data.isLoading ? <Spinner /> : "Sign in"}
               </Button>
             </Stack>
+            {data.isError && <Box as={"span"}>Something went wrong.</Box>}
             <Text>
-              Don't have accound <Link to="/signup">Create your account</Link>{" "}
+              Don't have accound{" "}
+              <Link color={"blue"} to="/signup">
+                Create your account
+              </Link>{" "}
             </Text>
           </Stack>
         </Box>

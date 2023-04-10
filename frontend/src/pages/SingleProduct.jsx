@@ -24,15 +24,15 @@ const SingleProduct = () => {
 
   useEffect(() => {
     dispatch(getProductByIdActionFn(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
   return (
     <>
-      {data.isError && (
+      {isError && (
         <Box as="span" color="red">
           Some thing went wrong
         </Box>
       )}
-      {data.isLoading ? (
+      {isLoading ? (
         <Box
           w={"70%"}
           h={"500px"}

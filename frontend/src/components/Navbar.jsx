@@ -12,29 +12,34 @@ import {
   Button,
   Image,
   useColorModeValue,
-  IconButton,
   useColorMode,
+  InputGroup,
+  InputLeftElement,
+  Spinner,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { userLogoutActionFn } from "../redux/authReducer/authActions";
 import axios from "axios";
-import { EmailIcon } from "@chakra-ui/icons";
+import { EmailIcon, SearchIcon, SpinnerIcon } from "@chakra-ui/icons";
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isAuth } = useSelector((state) => state.authReducer);
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const { isAuth } = useSelector((state) => state.authReducer);
   //console.log("user: ", user);
   useEffect(() => {
     if (input) {
+      setLoading(true);
       const getData = setTimeout(() => {
         axios
           .get(`${import.meta.env.VITE_BASE_URL}/product/search?q=${input}`)
           .then((response) => {
+            setLoading(false);
             setData(response.data.products);
             // console.log("navar deboune", response);
           });
@@ -43,12 +48,16 @@ const Navbar = () => {
       return () => clearTimeout(getData);
     } else {
       setData([]);
+      setLoading(false);
     }
   }, [input]);
-  console.log("datanav: ", data);
   // handleLogout;
   const hanldeLogout = () => {
     dispatch(userLogoutActionFn());
+  };
+
+  const handleLinkClick = () => {
+    setInput("");
   };
   return (
     <>
@@ -69,11 +78,24 @@ const Navbar = () => {
           </Text>
         </Link>
         <Box w={["80%", "60%", "40%"]}>
-          <Input
+          {/* <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Search here"
-          />
+          /> */}
+          <InputGroup size="md">
+            <Input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Search here"
+            />
+            <InputLeftElement ml={0} width="-4.5rem">
+              <Button bg={"transparent"} h="100%" size="sm">
+                {loading ? <Spinner size={"sm"} /> : <SearchIcon />}
+              </Button>
+            </InputLeftElement>
+          </InputGroup>
         </Box>
         <Menu>
           <MenuButton
@@ -138,11 +160,15 @@ const Navbar = () => {
           {data.length > 0 &&
             data.map((item, idx) => (
               <Box key={idx}>
-                <Link to={`/singleProduct/${item._id}`}>
+                <Link
+                  to={`/singleProduct/${item._id}`}
+                  onClick={() => handleLinkClick()}
+                >
                   <Flex
                     h={`${200 * item.length}px`}
                     alignItems={"center"}
                     gap={"8px"}
+                    mb={"2px"}
                   >
                     <Box h={"50px"} w={"50px"}>
                       <Image
