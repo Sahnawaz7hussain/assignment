@@ -68,7 +68,7 @@ const Products = () => {
           sort && (query._sort = sort);
           dispatch(getProductsActionFn(query));
         } else {
-          dispatch(userLogoutActionFn);
+          // dispatch(userLogoutActionFn);
           return toast({
             title: `${res.payload.response.data.message}`,
             description: "Please login again",

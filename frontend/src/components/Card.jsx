@@ -66,7 +66,7 @@ function Card({ data, deleteProduct }) {
       .then((res) => {
         // console.log("update,res:", res);
         if (res.type === "UPDATE_PRODUCT_FAILURE") {
-          dispatch(userLogoutActionFn());
+          // dispatch(userLogoutActionFn());
           onClose();
 
           toast({

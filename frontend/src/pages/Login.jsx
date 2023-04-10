@@ -146,7 +146,7 @@ export default function Login() {
             </Stack>
             {data.isError && <Box as={"span"}>Something went wrong.</Box>}
             <Text>
-              Don't have accound{" "}
+              Don't have account{" "}
               <Link color={"blue"} to="/signup">
                 Create your account
               </Link>{" "}

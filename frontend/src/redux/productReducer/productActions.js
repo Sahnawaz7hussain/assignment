@@ -6,7 +6,7 @@ const jwtToken = JSON.parse(localStorage.getItem("TOKEN"));
 console.log("jwt toke: ", jwtToken);
 const headers = {
   headers: {
-    authorization: `Bearer ${JSON.parse(localStorage.getItem("TOKEN"))}`,
+    authorization: `Bearer ${JSON.parse(window.localStorage.getItem("TOKEN"))}`,
   },
 };
 // add new product;

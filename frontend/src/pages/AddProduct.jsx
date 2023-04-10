@@ -61,7 +61,7 @@ const AddProduct = () => {
             isClosable: true,
           });
         } else {
-          dispatch(userLogoutActionFn());
+          // dispatch(userLogoutActionFn());
           toast({
             title: `${res.payload.message}`,
             description: "Please Login again",
@@ -70,7 +70,6 @@ const AddProduct = () => {
             isClosable: true,
             position: "top",
           });
-          navigate("/login");
         }
       })
       .catch((err) => {
