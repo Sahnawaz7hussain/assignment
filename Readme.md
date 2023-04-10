@@ -7,6 +7,8 @@
 - pagination
 - querySearch
 - Toggle theme
+
+### <a href="https://drive.google.com/file/d/1O5OMnUsHKqCRxLmDkWWKSyCAIp3x7fR2/view?usp=sharing" target="_blank" > Functionality explanation video</a>
 ## Homepage
 ![Screenshot (608)](https://user-images.githubusercontent.com/101489367/230803539-b08c59fe-1ae6-4715-924e-0e9143e72c8f.png)
 
